@@ -3940,6 +3940,526 @@ const QUESTION_BANK = [
     explanation: "2 คะแนน: เปรียบเทียบถูก + เหตุผลเรื่อง parity; 1 คะแนน: ได้บางส่วน",
     source: "Ch9_Storage_Architecture หน้า 11–12, 26",
     reviewLink: "#ca-storage"
+  },
+
+  /* ===== ข้อสอบจริง Exam 3 (ภาคต้น 2568) =====
+     pastNo = เลขข้อในข้อสอบจริง, points = คะแนนจริง (ใช้เฉพาะโหมด "ข้อสอบจริง")
+     ตัด "เลือกไม่ตอบข้อนี้" ออก · ไม่รวมข้อ 11, 33 (สูตรไม่แสดงในระบบ) และข้อ 25 (รหัสยืนยัน) */
+  {
+    id: "EX68-01", pastNo: 1, points: 2,
+    topic: "DL",
+    subtopic: "ระบบเลขและวงจรคำนวณ",
+    type: "mc",
+    question: "วงจร Half Adder (HA) มีอินพุตและเอาต์พุตตามข้อใด",
+    choices: ["อินพุต 2 เอาต์พุต 2", "อินพุต 3 เอาต์พุต 1", "อินพุต 3 เอาต์พุต 2", "อินพุต 2 เอาต์พุต 1"],
+    answer: 0,
+    explanation: "Half Adder บวกเลข 2 บิต (A, B) → 2 อินพุต และให้ 2 เอาต์พุตคือ Sum `S = A XOR B` และ Carry `C = A AND B`",
+    source: "Exam3_2568_Questions ข้อ 1",
+    reviewLink: "#dl-arith"
+  },
+  {
+    id: "EX68-02", pastNo: 2, points: 2,
+    topic: "CA",
+    subtopic: "Contemporary Architecture (ILP)",
+    type: "mc",
+    question: "สถาปัตยกรรมแบบ SuperScalar ที่มีการทำ Out-of-order Execution บรรลุ Instruction-Level Parallelism (ILP) ได้อย่างไร",
+    choices: ["โดยการประมวลผลคำสั่งหลายคำสั่งที่ไม่ขึ้นต่อกันใน Clock Cycle เดียวกัน แม้ว่าคำสั่งเหล่านั้นจะอยู่ในลำดับที่ไม่ต่อเนื่องกันในโปรแกรม", "โดยการแบ่งคำสั่งออกเป็น Stage ย่อย ๆ และให้คำสั่งหลายคำสั่งอยู่ใน Pipeline พร้อมกัน", "โดยการให้ Compiler จัดกลุ่มคำสั่งที่ไม่มีความขึ้นต่อกันและประมวลผลพร้อมกันในคำสั่งเดียว (Instruction Word)", "โดยการใช้คำสั่งเดียว (Single Instruction) ในการประมวลผลข้อมูลหลายชุด (Multiple Data) พร้อมกัน"],
+    answer: 0,
+    explanation: "SuperScalar + OoO วิเคราะห์ data dependency แบบไดนามิกในฮาร์ดแวร์ แล้วส่งคำสั่งที่พร้อมและไม่ขึ้นต่อกันไปทำพร้อมกันหลายคำสั่งใน cycle เดียว แม้อยู่ห่างกันในโค้ด (ตัวเลือกอื่นคือ pipelining, VLIW, SIMD)",
+    source: "Exam3_2568_Questions ข้อ 2",
+    reviewLink: "#ca-ilp"
+  },
+  {
+    id: "EX68-03", pastNo: 3, points: 2,
+    topic: "CA",
+    subtopic: "Multi-Cycle Processor",
+    type: "mc",
+    question: "ใน ISA หากคำสั่งถูกแบ่งออกเป็น 5 Stage (IF, ID, EX, MEM, WB) อะไรคือเหตุผลหลักที่ทำให้คำสั่ง Load Word (LW) ต้องการรอบนาฬิกา (Cycles) มากที่สุดในสถาปัตยกรรมแบบ Multi-Cycle",
+    choices: ["คำสั่ง LW มีการดำเนินการทางตรรกะใน ALU ที่ซับซ้อนกว่าคำสั่ง R-type (เช่น ADD)", "LW ต้องการการคำนวณ Branch Target Address ใน Stage ID", "LW เป็นคำสั่งเดียวที่ต้องเข้าถึงหน่วยความจำข้อมูล (Data Memory) เพื่ออ่านข้อมูล และต้องเข้าถึง Register File เพื่อเขียนกลับ (Write Back)", "LW ต้องรอให้คำสั่งก่อนหน้าทำ Forwarding ให้เสร็จก่อน"],
+    answer: 2,
+    explanation: "ใน Multi-Cycle MIPS คำสั่ง LW เป็นคำสั่งเดียวที่ทำครบทั้ง 5 stages (IF, ID, EX, MEM, WB) = 5 cycles ส่วน R-type/SW ใช้ 4 และ Branch ใช้ 3",
+    source: "Exam3_2568_Questions ข้อ 3",
+    reviewLink: "#ca-multi"
+  },
+  {
+    id: "EX68-04", pastNo: 4, points: 1,
+    topic: "CA",
+    subtopic: "Data Hazards และ Pipelined Datapath",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: RAW",
+    answer: "Read After Write",
+    acceptedAnswers: ["Read After Write", "Read-After-Write"],
+    explanation: "Data hazard แบบ true dependency: คำสั่งหลังต้องอ่าน register ที่คำสั่งก่อนหน้ายังเขียนผลไม่เสร็จ ถ้าไม่มี forwarding หรือ stall จะได้ค่าเก่า",
+    source: "Exam3_2568_Questions ข้อ 4",
+    reviewLink: "#ca-pipe2"
+  },
+  {
+    id: "EX68-05", pastNo: 5, points: 2,
+    topic: "CA",
+    subtopic: "Storage Architecture",
+    type: "mc",
+    question: "ข้อใดกล่าวถึงความแตกต่างและข้อได้เปรียบเชิงโครงสร้างของ SSD เมื่อเทียบกับ HDD ในบริบทของ Latency ได้ถูกต้องที่สุด",
+    choices: ["HDD สามารถปรับปรุง Latency ได้ดีกว่า SSD ด้วยเทคนิค 'Shorter Seek First' ในขณะที่ SSD มีข้อจำกัดทางไฟฟ้า", "SSD มี Latency สูงกว่า HDD ในการเขียน เนื่องจากต้องดำเนินการ Block Erasure ก่อนการเขียนใหม่ (Write Amplification)", "HDD มี Latency ในการอ่าน/เขียนต่ำกว่า SSD เนื่องจากใช้ Parallel Access ผ่าน Spindle หลายชุด", "SSD มี Latency ในการอ่าน/เขียนที่สม่ำเสมอและต่ำกว่ามาก เพราะไม่มี Rotational Latency และ Seek Time"],
+    answer: 3,
+    explanation: "SSD ใช้ NAND Flash ไม่มีชิ้นส่วนเชิงกล จึงไม่มี seek time (เลื่อนหัวอ่าน) และ rotational latency (รอจานหมุน) → latency ต่ำและสม่ำเสมอ",
+    source: "Exam3_2568_Questions ข้อ 5",
+    reviewLink: "#ca-storage"
+  },
+  {
+    id: "EX68-06", pastNo: 6, points: 2,
+    topic: "CA",
+    subtopic: "Performance",
+    type: "mc",
+    question: "โปรแกรมหนึ่งใช้เวลาทำงานแบ่งเป็น Floating Point (FP) 20%, Memory Access 50% และ Other 30% หากปรับปรุง FP Unit ให้เร็วขึ้น 2 เท่า และปรับปรุง Memory System ให้เร็วขึ้น 1.5 เท่าพร้อมกัน โปรแกรมจะเร็วขึ้นโดยรวมกี่เท่า",
+    choices: ["1.67 เท่า", "1.50 เท่า", "1.25 เท่า", "1.36 เท่า"],
+    answer: 3,
+    explanation: "Amdahl: T_new = 0.20/2 + 0.50/1.5 + 0.30 = 0.10 + 0.333 + 0.30 = 0.733\nSpeedup = 1 / 0.733 ≈ 1.36",
+    source: "Exam3_2568_Questions ข้อ 6",
+    reviewLink: "#ca-perf"
+  },
+  {
+    id: "EX68-07", pastNo: 7, points: 2,
+    topic: "DL",
+    subtopic: "K-map, Two-level Simplification, NAND/NOR",
+    type: "mc",
+    question: "เกตตรรกะชนิดใดที่ถูกพิจารณาว่าเป็น Universal Gate ซึ่งสามารถนำมาสร้างเกตพื้นฐานอื่นๆ (AND, OR, NOT) ได้ทั้งหมด",
+    choices: ["NAND และ NOR", "AND และ OR", "NOT", "XOR และ XNOR"],
+    answer: 0,
+    explanation: "NAND และ NOR แต่ละชนิดสามารถต่อเป็น NOT, AND, OR (และ XOR/XNOR) ได้ทั้งหมด จึงเป็น universal gate",
+    source: "Exam3_2568_Questions ข้อ 7",
+    reviewLink: "#dl-kmap"
+  },
+  {
+    id: "EX68-08", pastNo: 8, points: 1,
+    topic: "CA",
+    subtopic: "Storage Architecture",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: SSD",
+    answer: "Solid State Drive",
+    acceptedAnswers: ["Solid State Drive", "Solid-State Drive", "Solid State Disk", "Solid-State Disk"],
+    explanation: "Secondary storage ที่ใช้ NAND Flash (non-volatile) ไม่มีชิ้นส่วนกลไก เข้าถึงแบบสุ่มได้เร็ว ทนแรงกระแทก ใช้พลังงานต่ำ",
+    source: "Exam3_2568_Questions ข้อ 8",
+    reviewLink: "#ca-storage"
+  },
+  {
+    id: "EX68-09", pastNo: 9, points: 1,
+    topic: "CA",
+    subtopic: "Storage Architecture",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: USB",
+    answer: "Universal Serial Bus",
+    acceptedAnswers: ["Universal Serial Bus"],
+    explanation: "มาตรฐานบัสแบบอนุกรมสำหรับสื่อสารและจ่ายไฟระหว่างคอมพิวเตอร์กับอุปกรณ์ต่อพ่วง รองรับ Plug and Play และ Hot Swapping",
+    source: "Exam3_2568_Questions ข้อ 9",
+    reviewLink: "#ca-storage"
+  },
+  {
+    id: "EX68-10", pastNo: 10, points: 1,
+    topic: "CA",
+    subtopic: "Contemporary Architecture (ILP)",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: SIMD",
+    answer: "Single Instruction, Multiple Data",
+    acceptedAnswers: ["Single Instruction, Multiple Data", "Single-Instruction Multiple-Data"],
+    explanation: "ประเภทหนึ่งใน Flynn's Taxonomy: คำสั่งเดียวควบคุมการประมวลผลข้อมูลหลายชุดพร้อมกัน (vector/array) เช่น GPU, DSP, MMX/SSE/AVX",
+    source: "Exam3_2568_Questions ข้อ 10",
+    reviewLink: "#ca-ilp"
+  },
+  {
+    id: "EX68-12", pastNo: 12, points: 1,
+    topic: "CA",
+    subtopic: "Storage Architecture",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: RAID",
+    answer: "Redundant Array of Independent Disks",
+    acceptedAnswers: ["Redundant Array of Independent Disks", "Redundant Array of Inexpensive Disks", "Redundant Array of Independent Disk", "Redundant Array of Inexpensive Disk"],
+    explanation: "รวมดิสก์หลายลูกเป็น logical unit เดียว เพื่อเพิ่มความเร็ว (striping) และ/หรือความทนทาน (mirroring, parity) — เดิมใช้คำว่า Inexpensive",
+    source: "Exam3_2568_Questions ข้อ 12",
+    reviewLink: "#ca-storage"
+  },
+  {
+    id: "EX68-13", pastNo: 13, points: 2,
+    topic: "DL",
+    subtopic: "Finite State Machines",
+    type: "mc",
+    question: "FSM ที่มี 6 สถานะ ต้องใช้ Flip-Flop กี่ตัวเป็นอย่างน้อยในการจำค่า state",
+    choices: ["1", "3", "4", "2"],
+    answer: 1,
+    explanation: "ต้องการ n ที่น้อยที่สุดซึ่ง 2^n ≥ 6 → 2 ตัวได้แค่ 4 สถานะ (ไม่พอ), 3 ตัวได้ 8 สถานะ → 3 ตัว",
+    source: "Exam3_2568_Questions ข้อ 13",
+    reviewLink: "#dl-fsm"
+  },
+  {
+    id: "EX68-14", pastNo: 14, points: 2,
+    topic: "CA",
+    subtopic: "Cache Memory",
+    type: "mc",
+    question: "4-way Set Associative Cache ขนาด 64 KB, Block Size 16 Bytes, Address 32 bits ส่วนของ Address ที่ใช้เป็น Set Index และ Tag มีขนาดเท่าใด",
+    choices: ["Set Index 10 bits, Tag 18 bits", "Set Index 12 bits, Tag 16 bits", "Set Index 6 bits, Tag 22 bits", "Set Index 4 bits, Tag 24 bits"],
+    answer: 0,
+    explanation: "Offset: 16 B = 2^4 → 4 bits\nBlocks = 64 KB / 16 B = 4096; Sets = 4096 / 4 = 1024 = 2^10 → Index 10 bits\nTag = 32 − 10 − 4 = 18 bits",
+    source: "Exam3_2568_Questions ข้อ 14",
+    reviewLink: "#ca-cache"
+  },
+  {
+    id: "EX68-15", pastNo: 15, points: 2,
+    topic: "CA",
+    subtopic: "Data Hazards และ Pipelined Datapath",
+    type: "mc",
+    question: "ใน Pipelining, Forwarding (Bypassing) สามารถแก้ไข Hazard ชนิดใดได้โดยไม่จำเป็นต้อง Stall ในกรณีส่วนใหญ่",
+    choices: ["Control Hazard", "RAW Hazard", "Structural Hazard", "WAW Hazard"],
+    answer: 1,
+    explanation: "Forwarding ส่งผลจากปลาย EX (หรือ MEM) ของคำสั่งก่อนหน้าไปเข้า EX ของคำสั่งถัดไปทันที ไม่ต้องรอ WB → แก้ Read-After-Write hazard",
+    source: "Exam3_2568_Questions ข้อ 15",
+    reviewLink: "#ca-pipe2"
+  },
+  {
+    id: "EX68-16", pastNo: 16, points: 2,
+    topic: "CA",
+    subtopic: "Multi-Cycle Processor",
+    type: "mc",
+    question: "ใน Multi-Cycle Processor ที่ใช้ Finite State Machine (FSM) ควบคุม Control Unit องค์ประกอบใดใช้จัดเก็บและประมวลผลลำดับสถานะ เพื่อสร้างสัญญาณควบคุมในแต่ละรอบนาฬิกา",
+    choices: ["Instruction Register (IR)", "ALU", "Program Counter (PC)", "PLA หรือ Sequencer"],
+    answer: 3,
+    explanation: "Control FSM ใช้ PLA (หรือ microcode sequencer) ร่วมกับ state register เพื่อสร้าง control signals และกำหนด next state ทุก cycle",
+    source: "Exam3_2568_Questions ข้อ 16",
+    reviewLink: "#ca-multi"
+  },
+  {
+    id: "EX68-17", pastNo: 17, points: 2,
+    topic: "CA",
+    subtopic: "Pipelining และ Hazards",
+    type: "mc",
+    question: "ข้อใดกล่าวถูกต้องที่สุดเกี่ยวกับ CPI และ Clock Cycle Time ของสถาปัตยกรรมแบบ Pipelined เมื่อเทียบกับ Single-Cycle",
+    choices: ["Pipelined มี CPI โดยเฉลี่ยใกล้เคียง 1 (ในอุดมคติ) และมี Clock Cycle Time สั้นลง", "Pipelined มี CPI สูงขึ้น แต่มี Clock Cycle Time ยาวขึ้น", "Single-Cycle มี CPI ต่ำกว่า 1 แต่มี Clock Cycle Time สั้นลง", "Single-Cycle มี CPI สูงขึ้น แต่มี Throughput เพิ่มขึ้น"],
+    answer: 0,
+    explanation: "Single-Cycle: CPI = 1 แต่ clock ยาวเท่าคำสั่งที่ช้าที่สุด\nPipelined: clock สั้นลงตาม stage และในอุดมคติจบ 1 คำสั่ง/cycle (CPI ≈ 1) → throughput สูงขึ้น",
+    source: "Exam3_2568_Questions ข้อ 17",
+    reviewLink: "#ca-pipe"
+  },
+  {
+    id: "EX68-18", pastNo: 18, points: 2,
+    topic: "CA",
+    subtopic: "Virtual Memory",
+    type: "mc",
+    question: "เทคนิคใดช่วยให้ Cache Indexing และ TLB Access ทำไปพร้อมกันได้ เพื่อลด Latency ในการเข้าถึงหน่วยความจำอย่างมีนัยสำคัญ",
+    choices: ["Virtually Indexed, Virtually Tagged (VIVT)", "Physically Indexed, Physically Tagged (PIPT)", "Virtually Indexed, Physically Tagged (VIPT)", "Fully Associative Cache"],
+    answer: 2,
+    explanation: "VIPT ใช้บิตใน page offset (ซึ่งเหมือนกันทั้ง VA และ PA) เป็น set index ของ cache ขนานไปกับการแปล VPN → PPN ใน TLB แล้วเทียบ physical tag",
+    source: "Exam3_2568_Questions ข้อ 18",
+    reviewLink: "#ca-vm"
+  },
+  {
+    id: "EX68-19", pastNo: 19, points: 2,
+    topic: "DL",
+    subtopic: "ASM Chart และ Datapath/Control",
+    type: "mc",
+    question: "พิจารณา ASM ที่ออกแบบวงจรควบคุมการแสดงผล LED 4 ดวง ให้สว่างทีละดวงวนซ้ำ ควรใช้ส่วนประกอบใดเป็นหลักในการออกแบบตาม ASM นี้",
+    choices: ["Decoder และ Multiplexer", "ROM และ MUX", "Comparator และ ALU", "Register และ Counter"],
+    answer: 3,
+    explanation: "ไฟวิ่งวนซ้ำคือ sequencer → ใช้ counter (mod-4 หรือ ring counter) ร่วมกับ state register เพื่อเปลี่ยนสถานะตาม clock",
+    source: "Exam3_2568_Questions ข้อ 19",
+    reviewLink: "#dl-asm"
+  },
+  {
+    id: "EX68-20", pastNo: 20, points: 1,
+    topic: "DL",
+    subtopic: "ASM Chart และ Datapath/Control",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: ASM",
+    answer: "Algorithmic State Machine",
+    acceptedAnswers: ["Algorithmic State Machine"],
+    explanation: "แผนภาพคล้าย flowchart สำหรับออกแบบวงจรเชิงลำดับ/control unit ประกอบด้วย State Box (Moore output), Decision Box (ทดสอบอินพุต) และ Conditional Output Box (Mealy output)",
+    source: "Exam3_2568_Questions ข้อ 20",
+    reviewLink: "#dl-asm"
+  },
+  {
+    id: "EX68-21", pastNo: 21, points: 1,
+    topic: "DL",
+    subtopic: "ASM Chart และ Datapath/Control",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: RTL",
+    answer: "Register-Transfer Level",
+    acceptedAnswers: ["Register-Transfer Level", "Register Transfer Level", "Register Transfer Language", "Register-Transfer Language"],
+    explanation: "ระดับนามธรรมของการออกแบบวงจรซิงโครนัส: อธิบายการย้าย/แปลงข้อมูลระหว่าง registers ผ่าน combinational logic ในแต่ละ clock (เขียนด้วย HDL เช่น Verilog/VHDL) — เฉลยใช้ Level, รับ Language ด้วย",
+    source: "Exam3_2568_Questions ข้อ 21",
+    reviewLink: "#dl-asm"
+  },
+  {
+    id: "EX68-22", pastNo: 22, points: 2,
+    topic: "CA",
+    subtopic: "Cache Memory",
+    type: "mc",
+    question: "Cache Access Time 1 ns, Main Memory Access Time 100 ns และ Hit Rate 99% Effective Access Time (EAT) เป็นเท่าใด",
+    choices: ["1.99 ns", "10.0 ns", "101.0 ns", "2.99 ns"],
+    answer: 0,
+    explanation: "EAT = 0.99 × 1 + 0.01 × 100 = 0.99 + 1.00 = 1.99 ns\n(ถ้านับ miss penalty บวกเวลา cache ด้วย = 1 + 0.01 × 100 = 2.0 ns — ตัวเลือกที่ใกล้สุดคือ 1.99 ns)",
+    source: "Exam3_2568_Questions ข้อ 22",
+    reviewLink: "#ca-cache"
+  },
+  {
+    id: "EX68-23", pastNo: 23, points: 2,
+    topic: "CA",
+    subtopic: "Data Hazards และ Pipelined Datapath",
+    type: "mc",
+    question: "ใน Pipeline ของ MIPS (IF, ID, EX, MEM, WB) มีชุดคำสั่ง\n`ADD $r1, $r2, $r3`\n`SUB $r4, $r1, $r5`\nจะเกิด Stall กี่ Cycle ระหว่างสองคำสั่งนี้ ในกรณีที่ไม่มี และมี Forwarding Unit อย่างสมบูรณ์",
+    choices: ["ถ้าไม่มีเป็น 2 Cycles ถ้ามีจะเป็น 1 Cycle", "ถ้าไม่มีเป็น 3 Cycles ถ้ามีจะเป็น 1 Cycle", "ถ้าไม่มีเป็น 2 Cycles ถ้ามีจะเป็น 0 Cycle", "ถ้าไม่มีเป็น 3 Cycles ถ้ามีจะเป็น 0 Cycle"],
+    answer: 2,
+    explanation: "ไม่มี forwarding: ADD เขียน $r1 ใน WB (cycle 5) และ register file เขียนครึ่งแรก/อ่านครึ่งหลัง → SUB อ่านใน ID ได้ที่ cycle 5 → stall 2\nมี forwarding: ผลออกจาก EX ของ ADD (cycle 3) ส่งเข้า EX ของ SUB (cycle 4) ได้ทันที → stall 0",
+    source: "Exam3_2568_Questions ข้อ 23",
+    reviewLink: "#ca-pipe2"
+  },
+  {
+    id: "EX68-24", pastNo: 24, points: 2,
+    topic: "CA",
+    subtopic: "Contemporary Architecture (ILP)",
+    type: "mc",
+    question: "ตาม Flynn's Taxonomy ระบบ Multicore Processor ที่แต่ละ Core รันชุดคำสั่งที่ต่างกันบนข้อมูลที่ต่างกัน จัดอยู่ในประเภทใด",
+    choices: ["MIMD", "SIMD", "MISD", "SISD"],
+    answer: 0,
+    explanation: "MIMD (Multiple Instruction, Multiple Data): แต่ละ core มี instruction stream อิสระ ทำงานบนข้อมูลคนละชุด — รูปแบบหลักของ multicore ปัจจุบัน",
+    source: "Exam3_2568_Questions ข้อ 24",
+    reviewLink: "#ca-ilp"
+  },
+  {
+    id: "EX68-26", pastNo: 26, points: 2,
+    topic: "CA",
+    subtopic: "Cache Memory",
+    type: "mc",
+    question: "8-way Set Associative Cache ขนาด 128 KB, Block Size 64 Bytes, Address 40 bits ส่วนของ Address ที่เป็น Block Offset, Set Index และ Tag มีขนาดกี่บิตตามลำดับ",
+    choices: ["Block Offset: 8 bits, Set Index: 7 bits, Tag: 25 bits", "Block Offset: 6 bits, Set Index: 7 bits, Tag: 27 bits", "Block Offset: 6 bits, Set Index: 10 bits, Tag: 24 bits", "Block Offset: 6 bits, Set Index: 8 bits, Tag: 26 bits"],
+    answer: 3,
+    explanation: "Offset: 64 B = 2^6 → 6 bits\nBlocks = 128 KB / 64 B = 2048; Sets = 2048 / 8 = 256 = 2^8 → Index 8 bits\nTag = 40 − 8 − 6 = 26 bits",
+    source: "Exam3_2568_Questions ข้อ 26",
+    reviewLink: "#ca-cache"
+  },
+  {
+    id: "EX68-27", pastNo: 27, points: 2,
+    topic: "CA",
+    subtopic: "Pipelining และ Hazards",
+    type: "mc",
+    question: "โปรเซสเซอร์แบบ Single-Cycle มี Critical Path 300 ns เมื่อเปลี่ยนเป็น Pipelined 5-stage มี Stage Times 60, 50, 70, 40, 30 ns และ Register Overhead 10 ns ต่อ Stage จงหา Theoretical Speedup จากการ Pipelining",
+    choices: ["4.28 เท่า", "3.75 เท่า", "5.00 เท่า", "3.00 เท่า"],
+    answer: 1,
+    explanation: "Clock ของ pipeline = stage ที่ช้าที่สุด + overhead = 70 + 10 = 80 ns\nSpeedup = 300 / 80 = 3.75",
+    source: "Exam3_2568_Questions ข้อ 27",
+    reviewLink: "#ca-pipe"
+  },
+  {
+    id: "EX68-28", pastNo: 28, points: 2,
+    topic: "CA",
+    subtopic: "Performance",
+    type: "mc",
+    question: "เครื่อง X มี Clock Rate 3 GHz และ Average CPI 1.2 เครื่อง Y มี Clock Rate 2 GHz และ Average CPI 0.8 หากรันโปรแกรมที่มี Instruction Count เท่ากัน เครื่องใดมี CPU Time ต่ำกว่า และต่ำกว่ากี่เท่า",
+    choices: ["เครื่อง X ต่ำกว่า 1.11 เท่า", "ทั้งสองเครื่องมี CPU Time เท่ากัน", "เครื่อง Y ต่ำกว่า 1.11 เท่า", "เครื่อง X ต่ำกว่า 1.5 เท่า"],
+    answer: 1,
+    explanation: "CPU Time = IC × CPI / Clock Rate\nX: 1.2 / 3 GHz = 0.4 ns × IC\nY: 0.8 / 2 GHz = 0.4 ns × IC → เท่ากัน",
+    source: "Exam3_2568_Questions ข้อ 28",
+    reviewLink: "#ca-perf"
+  },
+  {
+    id: "EX68-29", pastNo: 29, points: 2,
+    topic: "CA",
+    subtopic: "Virtual Memory",
+    type: "mc",
+    question: "ข้อใดคือเป้าหมายหลักในการนำ Virtual Memory มาใช้ในระบบคอมพิวเตอร์",
+    choices: ["เพื่อให้ CPU เข้าถึง Cache ได้เร็วขึ้นโดยหลีกเลี่ยงการใช้ TLB", "เพื่อจำลองหน่วยความจำหลัก (Main Memory) ที่ใหญ่กว่าที่มีอยู่จริง และเพื่อแยกพื้นที่หน่วยความจำของแต่ละโปรเซส (Protection)", "เพื่อเร่งความเร็วในการคำนวณของ ALU โดยใช้หลักการของการทำ Address Translation", "เพื่อลดอัตราการเกิด Cache Miss โดยการเก็บข้อมูลทั้งหมดไว้ใน Page Table"],
+    answer: 1,
+    explanation: "Virtual memory ให้แต่ละโปรแกรมเห็นพื้นที่ใหญ่และต่อเนื่องเหมือนอยู่คนเดียว (illusory storage) และป้องกันไม่ให้โปรเซสหนึ่งเข้าถึงหน่วยความจำของโปรเซสอื่น/OS (protection)",
+    source: "Exam3_2568_Questions ข้อ 29",
+    reviewLink: "#ca-vm"
+  },
+  {
+    id: "EX68-30", pastNo: 30, points: 2,
+    topic: "CA",
+    subtopic: "Performance",
+    type: "mc",
+    question: "ตาม Amdahl's Law ต้องการเพิ่มความเร็วรวมอย่างน้อย 4 เท่า (S ≥ 4) โดยส่วนที่เร็วขึ้นได้มีเพียง 80% (F = 0.8) ส่วนที่ปรับปรุงต้องเร็วขึ้น (S enhanced) อย่างน้อยกี่เท่า",
+    choices: ["10 เท่า", "5 เท่า", "16 เท่า", "ไม่สามารถทำได้ เพราะถูกจำกัดด้วยส่วนที่ไม่มีการปรับปรุง (20%)"],
+    answer: 2,
+    explanation: "1 / (0.2 + 0.8/S_enh) ≥ 4 → 0.2 + 0.8/S_enh ≤ 0.25 → 0.8/S_enh ≤ 0.05 → S_enh ≥ 16",
+    source: "Exam3_2568_Questions ข้อ 30",
+    reviewLink: "#ca-perf"
+  },
+  {
+    id: "EX68-31", pastNo: 31, points: 2,
+    topic: "DL",
+    subtopic: "ระบบเลขและวงจรคำนวณ",
+    type: "mc",
+    question: "ในระบบ Two's Complement การแทนค่า −25 ในรูปแบบ 8 บิต คืออะไร",
+    choices: ["`1110 0110`", "`1110 0111`", "`1001 1001`", "`1001 0110`"],
+    answer: 1,
+    explanation: "+25 = 0001 1001 → กลับบิต 1110 0110 → บวก 1 = 1110 0111\nตรวจ: −128 + 64 + 32 + 4 + 2 + 1 = −25",
+    source: "Exam3_2568_Questions ข้อ 31",
+    reviewLink: "#dl-arith"
+  },
+  {
+    id: "EX68-32", pastNo: 32, points: 2,
+    topic: "DL",
+    subtopic: "Latches, Flip-flops และ Timing",
+    type: "mc",
+    question: "วงจร synchronous ที่มี D Flip-Flop 2 ตัว output ของ FF1 ต่อตรงเข้า FF2\ntpd ของ FF1 = 3 ns, tsu ของ FF2 = 2 ns, th ของ FF2 = 1 ns และ Clock Skew FF1 → FF2 = 1 ns\nจงหาคาบสัญญาณนาฬิกาขั้นต่ำ (Minimum Clock Period)",
+    choices: ["7 ns", "6 ns", "5 ns", "4 ns"],
+    answer: 3,
+    explanation: "Setup constraint: T ≥ tpd + tcomb + tsu − tskew (skew บวก = clock ของ FF2 มาช้ากว่า ช่วยเรื่อง setup)\nต่อตรง tcomb = 0 → T ≥ 3 + 0 + 2 − 1 = 4 ns\n(ถ้าคิด skew ทางลบแบบ worst case จะได้ 6 ns แต่เฉลยใช้ 4 ns)",
+    source: "Exam3_2568_Questions ข้อ 32",
+    reviewLink: "#dl-latch"
+  },
+  {
+    id: "EX68-34", pastNo: 34, points: 2,
+    topic: "DL",
+    subtopic: "ระบบเลขและวงจรคำนวณ",
+    type: "mc",
+    question: "วงจร Ripple Carry Adder (RCA) 4 บิต มีจุดอ่อนหลักคือ",
+    choices: ["Delay สะสมจากการส่ง Carry ต่อเนื่อง", "ใช้เกต XOR มากเกินไป", "ไม่สามารถบวกเลขลบได้", "ต้องการสัญญาณ Clock ภายนอก"],
+    answer: 0,
+    explanation: "Full adder ต่ออนุกรม บิตถัดไปต้องรอ carry จากบิตก่อนหน้า → carry propagation delay สะสมแบบ O(n)",
+    source: "Exam3_2568_Questions ข้อ 34",
+    reviewLink: "#dl-arith"
+  },
+  {
+    id: "EX68-35", pastNo: 35, points: 2,
+    topic: "CA",
+    subtopic: "Cache Memory",
+    type: "mc",
+    question: "Write-Back Cache Policy มีความได้เปรียบที่สำคัญที่สุดเมื่อเทียบกับ Write-Through ในด้านประสิทธิภาพในเรื่องใด",
+    choices: ["การจัดการ Cache Coherence ในระบบ Multiprocessor", "การลดความซับซ้อนของวงจรควบคุม Cache (Control Logic)", "การจัดการ Cache Miss โดยทำให้เวลาในการเข้าถึงหน่วยความจำหลักลดลง", "การจัดการ Write Hit ที่เกิดขึ้นบ่อยครั้ง โดยการลดจำนวนการเข้าถึง Main Memory"],
+    answer: 3,
+    explanation: "Write-back: write hit เขียนแค่ใน cache แล้วตั้ง dirty bit จะเขียนลง memory ตอนถูก replace เท่านั้น → ลด memory traffic มาก (write-through ต้องเขียน memory ทุกครั้ง)",
+    source: "Exam3_2568_Questions ข้อ 35",
+    reviewLink: "#ca-cache"
+  },
+  {
+    id: "EX68-36", pastNo: 36, points: 1,
+    topic: "DL",
+    subtopic: "MUX, Decoder, PLA, PAL, ROM",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: PLA",
+    answer: "Programmable Logic Array",
+    acceptedAnswers: ["Programmable Logic Array"],
+    explanation: "PLD ที่มี programmable AND array ต่อเข้า programmable OR array (โปรแกรมได้ทั้งสองส่วน) ใช้สร้างฟังก์ชันแบบ Sum of Products",
+    source: "Exam3_2568_Questions ข้อ 36",
+    reviewLink: "#dl-tech"
+  },
+  {
+    id: "EX68-37", pastNo: 37, points: 2,
+    topic: "CA",
+    subtopic: "ISA: Addressing Modes และ Instruction Format",
+    type: "mc",
+    question: "ใน MIPS Architecture คำสั่งประเภท I-type (Immediate Type) ถูกออกแบบมาเพื่อรองรับการใช้งานใดเป็นหลัก",
+    choices: ["การกระโดดไปยังตำแหน่งที่อยู่ไกล ๆ (Long Jumps)", "การอ้างอิงตำแหน่งหน่วยความจำ (Memory Addressing) เช่น LW/SW และการใช้ค่าคงที่ทันที (Immediate)", "การดำเนินการทางคณิตศาสตร์ระหว่าง Register ทั้งหมด (All Register Operations)", "การกำหนดค่าคงที่ขนาดใหญ่ (32 bits) ให้กับ Register"],
+    answer: 1,
+    explanation: "I-type = opcode 6 | rs 5 | rt 5 | immediate 16 bits ใช้กับคำสั่งค่าคงที่ (ADDI, ANDI), load/store (offset + base) และ branch (BEQ, BNE) — long jump เป็น J-type, reg-reg เป็น R-type",
+    source: "Exam3_2568_Questions ข้อ 37",
+    reviewLink: "#ca-isa-addr"
+  },
+  {
+    id: "EX68-38", pastNo: 38, points: 1,
+    topic: "CA",
+    subtopic: "ISA: ประเภทสถาปัตยกรรม",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: RISC",
+    answer: "Reduced Instruction Set Computer",
+    acceptedAnswers: ["Reduced Instruction Set Computer", "Reduced Instruction Set Computing"],
+    explanation: "แนวคิดออกแบบโปรเซสเซอร์ที่ใช้ชุดคำสั่งเล็ก เรียบง่าย ความยาวคงที่ แบบ load/store เพื่อให้ทำ pipeline ได้มีประสิทธิภาพสูงสุด",
+    source: "Exam3_2568_Questions ข้อ 38",
+    reviewLink: "#ca-isa-arch"
+  },
+  {
+    id: "EX68-39", pastNo: 39, points: 2,
+    topic: "CA",
+    subtopic: "Performance",
+    type: "mc",
+    question: "CPU A มี Clock Rate 3.0 GHz และ Instruction Mix: R-type 40% (1 cycle), Load/Store 30% (2 cycles), Branch 30% (3 cycles) ส่วน CPU B มี Clock Rate 2.5 GHz และ Average CPI 1.8 หาก Instruction Count เท่ากัน CPU ใดมีประสิทธิภาพสูงกว่า และสูงกว่ากี่เท่า",
+    choices: ["CPU A สูงกว่า 1.137 เท่า", "CPU A สูงกว่า 1.500 เท่า", "CPU B สูงกว่า 1.137 เท่า", "CPU B สูงกว่า 1.500 เท่า"],
+    answer: 0,
+    explanation: "CPI_A = 0.4×1 + 0.3×2 + 0.3×3 = 1.9 → Time_A = 1.9 / 3.0 GHz = 0.633 ns × IC\nTime_B = 1.8 / 2.5 GHz = 0.720 ns × IC\nSpeedup = 0.720 / 0.633 ≈ 1.137 → CPU A เร็วกว่า",
+    source: "Exam3_2568_Questions ข้อ 39",
+    reviewLink: "#ca-perf"
+  },
+  {
+    id: "EX68-40", pastNo: 40, points: 2,
+    topic: "CA",
+    subtopic: "Storage Architecture",
+    type: "mc",
+    question: "ระบบ RAID-6 มาตรฐานใช้ดิสก์ทั้งหมด 14 ลูก (รวม Parity) จะมีพื้นที่ใช้งานสุทธิ (Usable Capacity) คิดเป็นกี่เปอร์เซ็นต์ของพื้นที่รวม",
+    choices: ["ประมาณ 85.7%", "ประมาณ 66.7%", "ประมาณ 75.0%", "ประมาณ 92.8%"],
+    answer: 0,
+    explanation: "RAID-6 ใช้ dual parity เสียพื้นที่ 2 ลูก → 12 / 14 = 6/7 ≈ 85.7%",
+    source: "Exam3_2568_Questions ข้อ 40",
+    reviewLink: "#ca-storage"
+  },
+  {
+    id: "EX68-41", pastNo: 41, points: 2,
+    topic: "CA",
+    subtopic: "ISA: Endian และ Alignment",
+    type: "mc",
+    question: "ระบบใช้ Restricted Alignment (char 1B, short 2B, int 4B, long long 8B — alignment เท่ากับขนาด) จงหาขนาดในหน่วยความจำของโครงสร้างนี้ โดยไม่เรียงลำดับใหม่\n`struct S { char a; short b; long long c; int d; char e; int f; };`",
+    choices: ["28 bytes", "20 bytes", "32 bytes", "24 bytes"],
+    answer: 2,
+    explanation: "a@0, pad 1, b@2–3, pad 4, c@8–15, d@16–19, e@20, pad 3, f@24–27 → 28 bytes\nขนาด struct ต้องเป็นพหุคูณของ alignment สูงสุด (8) → ปัดเป็น 32 bytes (tail padding 4)",
+    source: "Exam3_2568_Questions ข้อ 41",
+    reviewLink: "#ca-isa-mem"
+  },
+  {
+    id: "EX68-42", pastNo: 42, points: 2,
+    topic: "CA",
+    subtopic: "ISA: Endian และ Alignment",
+    type: "mc",
+    question: "ความแตกต่างพื้นฐานระหว่าง Big Endian และ Little Endian ในการจัดเก็บข้อมูลคืออะไร",
+    choices: ["ทั้งสองวิธีแตกต่างกันที่วิธีตีความ Integer เท่านั้น ไม่เกี่ยวข้องกับการจัดเก็บ Byte", "Big Endian จัดเก็บ Byte ที่สำคัญน้อยที่สุด (LSB) ไว้ที่ Address ต่ำสุด", "Big Endian จัดเก็บ Byte ที่สำคัญที่สุด (MSB) ไว้ที่ Address ต่ำสุด (Lowest Address)", "Little Endian จัดเก็บ Byte ที่สำคัญที่สุด (MSB) ไว้ที่ Address ต่ำสุด"],
+    answer: 2,
+    explanation: "Big Endian: MSB อยู่ที่ address ต่ำสุด\nLittle Endian: LSB อยู่ที่ address ต่ำสุด",
+    source: "Exam3_2568_Questions ข้อ 42",
+    reviewLink: "#ca-isa-mem"
+  },
+  {
+    id: "EX68-43", pastNo: 43, points: 1,
+    topic: "CA",
+    subtopic: "Contemporary Architecture (ILP)",
+    type: "written",
+    question: "เขียนคำเต็มภาษาอังกฤษของคำย่อ: GPU",
+    answer: "Graphics Processing Unit",
+    acceptedAnswers: ["Graphics Processing Unit", "Graphic Processing Unit"],
+    explanation: "โปรเซสเซอร์แบบขนานขนาดใหญ่ (massively parallel) มีคอร์เล็กนับพัน เหมาะกับงานข้อมูลมากพร้อมกัน เช่น เรนเดอร์ 3D, deep learning",
+    source: "Exam3_2568_Questions ข้อ 43",
+    reviewLink: "#ca-ilp"
+  },
+  {
+    id: "EX68-44", pastNo: 44, points: 2,
+    topic: "CA",
+    subtopic: "Cache Memory",
+    type: "mc",
+    question: "ข้อใดกล่าวถึงความหมายของ Principle of Locality ที่ใช้เป็นรากฐานของการออกแบบ Memory Hierarchy ได้ถูกต้องที่สุด",
+    choices: ["โปรแกรมใช้คำสั่งที่ซับซ้อนน้อยกว่าคำสั่งที่เรียบง่าย", "การเพิ่มขนาด Cache จะนำไปสู่การเพิ่มความเร็วเชิงเส้นเสมอ", "โปรแกรมเข้าถึงหน่วยความจำในช่วงเวลาและพื้นที่ที่จำกัด (Temporal and Spatial Locality)", "ต้นทุนต่อบิตของหน่วยความจำหลักจะลดลง 40% ทุกปี"],
+    answer: 2,
+    explanation: "Temporal locality: ข้อมูลที่เพิ่งใช้มีแนวโน้มถูกใช้อีกเร็วๆ นี้\nSpatial locality: ข้อมูลที่อยู่ใกล้ตำแหน่งที่เพิ่งใช้มีแนวโน้มถูกใช้ต่อ",
+    source: "Exam3_2568_Questions ข้อ 44",
+    reviewLink: "#ca-cache"
+  },
+  {
+    id: "EX68-45", pastNo: 45, points: 2,
+    topic: "CA",
+    subtopic: "Performance",
+    type: "mc",
+    question: "ปรับปรุงชิ้นส่วนหนึ่งของ CPU ให้เร็วขึ้น 15 เท่า โดยส่วนนี้ใช้เวลา 90% ของเวลาทำงานทั้งหมด โปรแกรมจะเร็วขึ้นโดยรวมประมาณกี่เท่า",
+    choices: ["1.50 เท่า", "9.375 เท่า", "15.00 เท่า", "6.25 เท่า"],
+    answer: 3,
+    explanation: "T_new = 0.10 + 0.90/15 = 0.10 + 0.06 = 0.16 → Speedup = 1 / 0.16 = 6.25",
+    source: "Exam3_2568_Questions ข้อ 45",
+    reviewLink: "#ca-perf"
+  },
+  {
+    id: "EX68-46", pastNo: 46, points: 2,
+    topic: "CA",
+    subtopic: "ISA: ประเภทสถาปัตยกรรม",
+    type: "mc",
+    question: "แนวคิดหลักของ RISC Architecture คือการลดความซับซ้อนของชุดคำสั่ง เพื่อให้บรรลุเป้าหมายด้านประสิทธิภาพใดเป็นหลัก",
+    choices: ["เพิ่มจำนวนคำสั่งทั้งหมดที่จำเป็นในการเขียนโปรแกรม", "ลดจำนวน Register ที่โปรเซสเซอร์ต้องใช้ในการทำงาน", "ลด CPI ให้เข้าใกล้ 1 และทำให้ทำ Pipelining ได้อย่างมีประสิทธิภาพ", "ทำให้การเข้ารหัสชุดคำสั่งมีความยืดหยุ่นสูง (Variable-length Instructions)"],
+    answer: 2,
+    explanation: "คำสั่งสั้น เรียบง่าย ความยาวคงที่ → decode/control เร็ว เกือบทุกคำสั่งจบใน 1 cycle (CPI ≈ 1) และเหมาะกับ pipelining",
+    source: "Exam3_2568_Questions ข้อ 46",
+    reviewLink: "#ca-isa-arch"
   }
 ];
 
@@ -3995,7 +4515,7 @@ function esc(s) {
 }
 function fmt(s) { return esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\n/g, "<br>"); }
 function secOf(q) { return q.reviewLink.replace(/^#/, ""); }
-function pointsOf(q) { return CONFIG.POINTS[q.type]; }
+function pointsOf(q) { return (S && S.past && q.points) || CONFIG.POINTS[q.type]; }   // โหมดข้อสอบจริงใช้คะแนนตามข้อสอบ
 function isAuto(q) { return q.type === "mc" || (Array.isArray(q.acceptedAnswers) && q.acceptedAnswers.length > 0); }
 function qAt(i) { return BANK.get(S.items[i].qid); }
 function reviewLinkHtml(q) { return `<a href="${esc(q.reviewLink)}">📘 อ่านเนื้อหา: ${esc(q.subtopic)}</a>`; }
@@ -4075,12 +4595,13 @@ function buildTopic(secs, n) {
   const list = pool(q => set.has(secOf(q)));
   return orderParts(n > 0 ? take(list, n) : list);
 }
+function buildPast() { return pool(q => q.pastNo).sort((a, b) => a.pastNo - b.pastNo); }
 function makeItem(q) { return { qid: q.id, order: q.type === "mc" ? shuffle(q.choices.map((_, k) => k)) : null }; }
 
 function startSession(questions, opts) {
   if (!questions.length) return;
   S = {
-    kind: opts.kind, mode: opts.mode, topics: opts.topics || null,
+    kind: opts.kind, mode: opts.mode, topics: opts.topics || null, past: !!opts.past,
     items: questions.map(makeItem), answers: {}, flags: {}, checked: {}, self: {},
     current: 0, startedAt: Date.now(), minutes: opts.minutes || 0,
     endTime: opts.minutes > 0 ? Date.now() + opts.minutes * 60000 : null,
@@ -4255,6 +4776,7 @@ function renderSetup(preTopics) {
         ${opt("exam", "จำลองสอบจริง", "จับเวลา 90 นาที หมดเวลาส่งอัตโนมัติ ดูเฉลยหลังส่งเท่านั้น")}
         ${opt("practice", "โหมดฝึก (ชุดเต็ม)", "ตรวจรายข้อได้ทันที พร้อมลิงก์ไปอ่านเนื้อหา ตั้งเวลาเองได้")}
         ${opt("topic", "ฝึกเฉพาะหัวข้อ", "เลือกหัวข้อทางขวา ตรวจรายข้อได้ ตั้งจำนวนข้อและเวลาเองได้")}
+        ${opt("past", "ข้อสอบจริง Exam 3 (ภาคต้น 2568)", `${buildPast().length} ข้อเรียงตามข้อสอบจริง · Choice ข้อละ 2 + คำย่อข้อละ 1 = ${buildPast().reduce((s, q) => s + q.points, 0)} คะแนน · ตั้งเวลาเองได้`)}
         <div class="field" id="timeField"><label for="setupMin">เวลา (นาที, 0 = ไม่จับเวลา)</label>
           <input type="number" id="setupMin" min="0" max="300" value="${st.minutes != null ? st.minutes : 90}"></div>
         <div class="field" id="countField"><label for="setupCount">จำนวนข้อ</label>
@@ -4290,6 +4812,7 @@ function startFromSetup() {
   lsSet(LS.setup, { kind, minutes, count, topics });
   if (kind === "exam") return startSession(buildFull(), { kind: "full", mode: "exam", minutes: CONFIG.EXAM_MIN });
   if (kind === "practice") return startSession(buildFull(), { kind: "full", mode: "practice", minutes });
+  if (kind === "past") return startSession(buildPast(), { kind: "past", mode: "exam", minutes, past: true });
   if (!topics.length) return openAlert("ยังไม่ได้เลือกหัวข้อ", "<p>เลือกอย่างน้อย 1 หัวข้อทางขวาก่อนเริ่ม</p>");
   startSession(buildTopic(topics, count), { kind: "topic", mode: "practice", minutes, topics });
 }
@@ -4297,7 +4820,7 @@ function startFromSetup() {
 /* ---------- running ---------- */
 function renderRun() {
   $("practiceSwitch").checked = S.mode === "practice";
-  $("navTitle").textContent = { full: S.mode === "exam" ? "จำลองสอบจริง" : "โหมดฝึก", topic: "ฝึกเฉพาะหัวข้อ", retry: "ทำเฉพาะข้อที่ผิด" }[S.kind] || "ข้อสอบ";
+  $("navTitle").textContent = { full: S.mode === "exam" ? "จำลองสอบจริง" : "โหมดฝึก", topic: "ฝึกเฉพาะหัวข้อ", past: "ข้อสอบจริง 2568", retry: "ทำเฉพาะข้อที่ผิด" }[S.kind] || "ข้อสอบ";
   renderNav(); renderQuestion();
 }
 
@@ -4534,7 +5057,7 @@ function renderResult() {
   const counts = { all: r.rows.length, wrong: notFull.length, ok: r.rows.length - notFull.length };
   const fbtn = (k, label) => `<button type="button" class="btn small ${reviewFilter === k ? "active" : ""}" data-filter="${k}">${label} (${counts[k]})</button>`;
   const rows = r.rows.filter(x => reviewFilter === "all" || (reviewFilter === "wrong" ? x.earned < x.max : x.earned >= x.max));
-  const kindLabel = { full: S.mode === "exam" ? "จำลองสอบจริง" : "โหมดฝึก (ชุดเต็ม)", topic: "ฝึกเฉพาะหัวข้อ", retry: "ทำเฉพาะข้อที่ผิด" }[S.kind];
+  const kindLabel = { full: S.mode === "exam" ? "จำลองสอบจริง" : "โหมดฝึก (ชุดเต็ม)", topic: "ฝึกเฉพาะหัวข้อ", past: "ข้อสอบจริง Exam 3 (2568)", retry: "ทำเฉพาะข้อที่ผิด" }[S.kind];
   $("quizResult").innerHTML = `
     ${S.timeout ? '<div class="notice">⏱ หมดเวลา — ระบบส่งคำตอบให้อัตโนมัติ</div>' : ""}
     <div class="card">
@@ -4585,7 +5108,7 @@ function renderHistory() {
   const full = hist.filter(h => h.kind === "full");
   const best = full.length ? Math.max(...full.map(h => h.pct)) : null;
   const avg = full.length ? Math.round(10 * full.reduce((s, h) => s + h.pct, 0) / full.length) / 10 : null;
-  const kindName = h => ({ full: h.mode === "exam" ? "จำลองสอบ" : "ฝึกชุดเต็ม", topic: "เฉพาะหัวข้อ", retry: "ข้อที่ผิด" }[h.kind] || h.kind);
+  const kindName = h => ({ full: h.mode === "exam" ? "จำลองสอบ" : "ฝึกชุดเต็ม", topic: "เฉพาะหัวข้อ", past: "ข้อสอบจริง 2568", retry: "ข้อที่ผิด" }[h.kind] || h.kind);
   $("historyBox").innerHTML = `
     ${full.length ? `<p>ชุดเต็ม ${full.length} ครั้ง · สูงสุด <b>${best}%</b> · เฉลี่ย <b>${avg}%</b></p>` : ""}
     <div class="tbl"><table><thead><tr><th>วันที่</th><th>ชุด</th><th class="num">คะแนน</th><th style="min-width:120px">%</th><th class="num">DL</th><th class="num">CA</th><th class="num">เวลา</th></tr></thead><tbody>
@@ -4705,9 +5228,10 @@ function bindEvents() {
       const qs = S.result.rows.filter(x => x.earned < x.max).map(x => BANK.get(x.qid));
       const pts = qs.reduce((s, q) => s + pointsOf(q), 0);
       const minutes = S.endTime ? Math.max(5, Math.round(CONFIG.EXAM_MIN * pts / 60)) : 0;
-      startSession(orderParts(qs), { kind: "retry", mode: S.mode, minutes });
+      startSession(orderParts(qs), { kind: "retry", mode: S.mode, minutes, past: S.past });
     } else if (id === "newSetBtn") {
-      if (S.kind === "topic" && S.topics) startSession(buildTopic(S.topics, S.items.length), { kind: "topic", mode: "practice", minutes: S.minutes, topics: S.topics });
+      if (S.kind === "past") startSession(buildPast(), { kind: "past", mode: S.mode, minutes: S.minutes, past: true });
+      else if (S.kind === "topic" && S.topics) startSession(buildTopic(S.topics, S.items.length), { kind: "topic", mode: "practice", minutes: S.minutes, topics: S.topics });
       else startSession(buildFull(), { kind: "full", mode: S.mode, minutes: S.mode === "exam" ? CONFIG.EXAM_MIN : S.minutes });
     } else if (id === "topicPracticeBtn") {
       const weak = weakSections(S.result).map(w => w.id);
